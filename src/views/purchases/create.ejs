@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <%- include('../partials/head', { title: 'Nueva Compra | Boutique Panel' }) %>
+</head>
+<body>
+<div class="dashboard-wrapper">
+    <%- include('../partials/sidebar') %>
+
+    <main class="main-content">
+        <%- include('../partials/top_header') %>
+
+        <div class="container-fluid px-4 pb-5 mt-4">
+
+            <!-- Encabezado -->
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <div class="d-flex align-items-center gap-3">
+                    <a href="/compras" class="btn btn-sm" style="background:#F8EFF2;color:var(--text-muted);border:1px solid #EEE4E1;">
+                        <i class="bi bi-arrow-left"></i>
+                    </a>
+                    <div>
+                        <h2 class="module-title mb-0">
+                            <i class="bi bi-cart-plus module-title-icon"></i> Registrar Ingreso
+                        </h2>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="boutique-divider mb-4">
+
+            <div class="row g-4 d-flex align-items-stretch">
+                <!-- Columna Izquierda: Datos Comprobante -->
+                <div class="col-lg-4 d-flex flex-column gap-3">
+                    <div class="widget-card flex-grow-1">
+                        <div class="widget-header-dark" style="border-radius:16px 16px 0 0;padding:1rem 1.5rem;">
+                            <span class="fw-semibold" style="font-family:'Inter',sans-serif;font-size:0.9rem;">
+                                <i class="bi bi-receipt me-2"></i>Datos del Comprobante
+                            </span>
+                        </div>
+                        <div class="card-body p-4">
+                            <form id="formCompra">
+                                <div class="mb-4">
+                                    <label class="form-label" style="font-size:0.8rem;text-transform:uppercase;font-weight:700;letter-spacing:0.5px;color:var(--text-muted);">Proveedor <span style="color:var(--danger);">*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text" style="background:#FBF7F5;border-color:#EEE4E1;"><i class="bi bi-buildings"></i></span>
+                                        <select id="proveedor_id" class="form-select" style="font-weight:600;color:var(--text-primary);" required>
+                                            <option value="">-- Seleccionar Proveedor --</option>
+                                            <% proveedores.forEach(p => { %>
+                                            <option value="<%= p.id %>"><%= p.nombre_empresa %></option>
+                                            <% }) %>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row g-3 mb-4">
+                                    <div class="col-xl-6">
+                                        <label class="form-label" style="font-size:0.8rem;text-transform:uppercase;font-weight:700;letter-spacing:0.5px;color:var(--text-muted);">Tipo Doc.</label>
+                                        <select id="tipo_comprobante" class="form-select">
+                                            <option value="Factura">Factura</option>
+                                            <option value="Boleta">Boleta</option>
+                                            <option value="Guía">Guía Remisión</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-xl-6">
+                                        <label class="form-label" style="font-size:0.8rem;text-transform:uppercase;font-weight:700;letter-spacing:0.5px;color:var(--text-muted);">N° Doc.</label>
+                                        <input type="text" id="numero_comprobante" class="form-control" placeholder="F001-234">
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="form-label" style="font-size:0.8rem;text-transform:uppercase;font-weight:700;letter-spacing:0.5px;color:var(--text-muted);">Observaciones</label>
+                                    <textarea id="observaciones" class="form-control" rows="2" placeholder="Opcional..."></textarea>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <div class="widget-card" style="background:var(--primary);border:none;">
+                        <div class="card-body text-center p-4">
+                            <h6 style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.7);margin-bottom:0.5rem;">Total a Pagar</h6>
+                            <div style="font-family:'Playfair Display',serif;font-size:3rem;font-weight:700;line-height:1;color:#fff;">
+                                <%= typeof shop !== 'undefined' ? shop.moneda : 'S/' %> <span id="totalGeneral">0.00</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button onclick="guardarCompra()" class="btn btn-boutique w-100 py-3" style="font-size:1.1rem;font-weight:700;">
+                        <i class="bi bi-save2 me-2"></i> Confirmar Ingreso
+                    </button>
+                </div>
+
+                <!-- Columna Derecha: Detalles Productos -->
+                <div class="col-lg-8">
+                    <div class="widget-card h-100 d-flex flex-column">
+                        <div class="p-3 border-bottom" style="background:#FBF7F5;border-color:#EEE4E1!important;border-radius:16px 16px 0 0;">
+                            <div class="input-group input-group-lg">
+                                <span class="input-group-text bg-white border-end-0" style="color:var(--primary-light);"><i class="bi bi-search"></i></span>
+                                <input type="text" id="buscador" class="form-control border-start-0 ps-0" style="font-size:0.95rem;font-weight:500;" placeholder="Buscar producto por nombre o código para agregar..." list="datalistProductos">
+                                <datalist id="datalistProductos">
+                                    <% productos.forEach(p => { %>
+                                    <option value="<%= p.nombre %>" data-id="<%= p.id %>" data-costo="<%= p.precio_compra %>">
+                                    <% }) %>
+                                </datalist>
+                                <button class="btn btn-primary px-4" style="background:var(--primary);border:none;" onclick="agregarProducto()">Añadir</button>
+                            </div>
+                        </div>
+
+                        <div class="card-body p-0 table-responsive flex-grow-1">
+                            <table class="boutique-table m-0">
+                                <thead>
+                                    <tr>
+                                        <th>Producto</th>
+                                        <th width="120" class="text-center">Cantidad</th>
+                                        <th width="140" class="text-end">Costo Unit.</th>
+                                        <th width="120" class="text-end">Subtotal</th>
+                                        <th width="60" class="text-center"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tablaDetalle">
+                                    <!-- Items dinámicos -->
+                                </tbody>
+                            </table>
+                            <div id="emptyMsg" class="text-center py-5">
+                                <div style="display:inline-flex;align-items:center;justify-content:center;width:80px;height:80px;border-radius:50%;background:#F8EFF2;margin-bottom:1rem;">
+                                    <i class="bi bi-box-seam" style="font-size:2.5rem;color:var(--primary-light);"></i>
+                                </div>
+                                <h6 style="color:var(--text-primary);font-weight:700;margin-bottom:0.25rem;">Sin productos en la lista</h6>
+                                <p style="color:var(--text-muted);font-size:0.85rem;margin:0;">Usa el buscador superior para agregar mercadería al ingreso.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+</div>
+
+<script>
+    const productosDB = <%- JSON.stringify(productos) %>;
+    let carrito = [];
+
+    document.getElementById('buscador').addEventListener('change', function() {
+        agregarProducto();
+    });
+
+    function agregarProducto() {
+        const input = document.getElementById('buscador');
+        const val = input.value;
+        const producto = productosDB.find(p => p.nombre === val || p.codigo_barras === val);
+
+        if (producto) {
+            const existe = carrito.find(i => i.id === producto.id);
+            if (existe) {
+                alert('El producto ya está en la lista. Modifica la cantidad directamente en la tabla.');
+            } else {
+                carrito.push({
+                    id: producto.id,
+                    nombre: producto.nombre,
+                    codigo: producto.codigo_barras || 'S/C',
+                    cantidad: 1,
+                    costo: parseFloat(producto.precio_compra || 0),
+                    subtotal: parseFloat(producto.precio_compra || 0)
+                });
+                renderTabla();
+            }
+            input.value = '';
+            input.focus();
+        }
+    }
+
+    function renderTabla() {
+        const tbody = document.getElementById('tablaDetalle');
+        const empty = document.getElementById('emptyMsg');
+        const totalSpan = document.getElementById('totalGeneral');
+        
+        tbody.innerHTML = '';
+        let total = 0;
+
+        if (carrito.length === 0) {
+            empty.style.display = 'block';
+        } else {
+            empty.style.display = 'none';
+            carrito.forEach((item, index) => {
+                total += item.subtotal;
+                const row = `
+                    <tr>
+                        <td>
+                            <div class="fw-bold" style="color:var(--text-primary);font-size:0.9rem;">${item.nombre}</div>
+                            <span class="badge-champagne" style="font-size:0.65rem;font-family:'Inter',monospace;"><i class="bi bi-upc me-1"></i>${item.codigo}</span>
+                        </td>
+                        <td class="text-center">
+                            <input type="number" class="form-control form-control-sm text-center fw-bold text-primary mx-auto" style="width:70px;background:#FBF7F5;border-color:#EEE4E1;" value="${item.cantidad}" min="1" onchange="updateItem(${index}, 'cantidad', this.value)">
+                        </td>
+                        <td>
+                            <div class="input-group input-group-sm justify-content-end">
+                                <span class="input-group-text bg-white border-end-0 text-muted" style="border-color:#EEE4E1;"><%= typeof shop !== 'undefined' ? shop.moneda : 'S/' %></span>
+                                <input type="number" class="form-control form-control-sm text-end border-start-0" style="max-width:80px;border-color:#EEE4E1;padding-left:0;" value="${item.costo}" min="0" step="0.01" onchange="updateItem(${index}, 'costo', this.value)">
+                            </div>
+                        </td>
+                        <td class="text-end">
+                            <span style="font-family:'Inter',sans-serif;font-weight:700;color:var(--primary);"><%= typeof shop !== 'undefined' ? shop.moneda : 'S/' %> ${item.subtotal.toFixed(2)}</span>
+                        </td>
+                        <td class="text-center">
+                            <button class="btn btn-sm" style="color:var(--danger);background:rgba(192,97,111,0.1);border-radius:8px;" onclick="removeItem(${index})" title="Quitar">
+                                <i class="bi bi-trash3-fill"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+        totalSpan.innerText = total.toFixed(2);
+    }
+
+    function updateItem(index, field, value) {
+        const item = carrito[index];
+        if (field === 'cantidad') item.cantidad = parseInt(value) || 1;
+        if (field === 'costo') item.costo = parseFloat(value) || 0;
+        
+        item.subtotal = item.cantidad * item.costo;
+        renderTabla();
+    }
+
+    function removeItem(index) {
+        carrito.splice(index, 1);
+        renderTabla();
+    }
+
+    async function guardarCompra() {
+        const proveedor = document.getElementById('proveedor_id').value;
+        const numero = document.getElementById('numero_comprobante').value;
+        
+        if (!proveedor) return alert('Por favor, seleccione un proveedor.');
+        if (carrito.length === 0) return alert('La lista de compra está vacía.');
+
+        if (!confirm('¿Confirmar el ingreso de mercadería? Esto actualizará el stock inmediatamente.')) return;
+
+        const data = {
+            proveedor_id: proveedor,
+            tipo_comprobante: document.getElementById('tipo_comprobante').value,
+            numero_comprobante: numero,
+            observaciones: document.getElementById('observaciones').value,
+            total: parseFloat(document.getElementById('totalGeneral').innerText),
+            items: carrito.map(i => ({
+                producto_id: i.id,
+                cantidad: i.cantidad,
+                costo: i.costo,
+                subtotal: i.subtotal
+            }))
+        };
+
+        try {
+            const res = await fetch('/compras', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data)
+            });
+            const json = await res.json();
+            
+            if (json.success) {
+                alert('✅ Ingreso registrado correctamente.');
+                window.location.href = '/compras';
+            } else {
+                alert('Error al registrar: ' + json.message);
+            }
+        } catch (e) {
+            console.error(e);
+            alert('Error de conexión con el servidor.');
+        }
+    }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

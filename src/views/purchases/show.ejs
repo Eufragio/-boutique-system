@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <%- include('../partials/head', { title: 'Detalle de Ingreso | Boutique Panel' }) %>
+    <style>
+        @media print {
+            body * { visibility: hidden; }
+            #printableArea, #printableArea * { visibility: visible; }
+            #printableArea { position: absolute; left: 0; top: 0; width: 100%; border: none; box-shadow: none; }
+            .no-print { display: none !important; }
+            .dashboard-wrapper { display: block; }
+            .main-content { margin: 0; padding: 0; }
+        }
+    </style>
+</head>
+<body>
+<div class="dashboard-wrapper">
+    <div class="no-print">
+        <%- include('../partials/sidebar') %>
+    </div>
+    
+    <main class="main-content">
+        <div class="no-print">
+            <%- include('../partials/top_header') %>
+        </div>
+
+        <div class="container-fluid px-4 pb-5 mt-4">
+
+            <!-- Encabezado -->
+            <div class="d-flex align-items-center justify-content-between mb-4 no-print">
+                <div class="d-flex align-items-center gap-3">
+                    <a href="/compras" class="btn btn-sm" style="background:#F8EFF2;color:var(--text-muted);border:1px solid #EEE4E1;">
+                        <i class="bi bi-arrow-left"></i>
+                    </a>
+                    <div>
+                        <h4 class="mb-0" style="font-family:'Playfair Display',serif;font-weight:700;color:var(--text-primary);">
+                            📄 Detalle de Ingreso <span style="color:var(--primary);">#<%= String(compra.id).padStart(6, '0') %></span>
+                        </h4>
+                        <small class="text-muted">Registrado el <%= formatDateLong(compra.fecha) %></small>
+                    </div>
+                </div>
+                
+                <button onclick="window.print()" class="btn btn-boutique">
+                    <i class="bi bi-printer me-1"></i> Imprimir Documento
+                </button>
+            </div>
+
+            <div id="printableArea">
+                <div class="widget-card" style="box-shadow:none;border:1px solid #EEE4E1;">
+                    <div class="card-header bg-white" style="padding:2rem 2rem 1.5rem;border-bottom:1px dashed #EEE4E1;border-radius:16px 16px 0 0;">
+                        <div class="row align-items-center">
+                            <div class="col-sm-6 mb-3 mb-sm-0">
+                                <h6 style="font-size:0.75rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:0.25rem;">Datos del Proveedor</h6>
+                                <h4 style="font-family:'Playfair Display',serif;font-weight:700;color:var(--primary);margin-bottom:0.25rem;"><%= compra.proveedor_nombre %></h4>
+                                <div style="font-family:'Inter',monospace;font-size:0.85rem;color:var(--text-muted);">
+                                    <i class="bi bi-card-heading me-1"></i>RUC: <%= compra.proveedor_ruc || 'N/A' %>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 text-sm-end">
+                                <h6 style="font-size:0.75rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:0.5rem;">Documento de Referencia</h6>
+                                <div class="d-inline-block px-3 py-2 rounded-3 mb-2" style="background:#FBF7F5;border:1px solid #EEE4E1;font-weight:700;color:var(--text-primary);">
+                                    <i class="bi bi-file-earmark-text me-2" style="color:var(--primary-light);"></i><%= compra.tipo_comprobante %>: <%= compra.numero_comprobante || 'S/N' %>
+                                </div>
+                                <div style="font-size:0.8rem;">
+                                    Estado del ingreso: <span style="color:var(--success);font-weight:700;"><i class="bi bi-check-circle-fill me-1"></i>Completado</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="boutique-table m-0" style="border-radius:0;">
+                                <thead>
+                                    <tr>
+                                        <th style="padding-left:2rem;">Descripción del Producto</th>
+                                        <th class="text-center">Cant.</th>
+                                        <th class="text-end">Costo Unit.</th>
+                                        <th class="text-end" style="padding-right:2rem;">Subtotal</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% compra.items.forEach(item => { %>
+                                    <tr>
+                                        <td style="padding-left:2rem;">
+                                            <div class="fw-bold" style="color:var(--text-primary);font-size:0.9rem;"><%= item.producto_nombre %></div>
+                                            <span style="font-family:'Inter',monospace;font-size:0.7rem;color:var(--text-muted);"><%= item.codigo_barras || 'S/C' %></span>
+                                        </td>
+                                        <td class="text-center">
+                                            <span style="display:inline-block;width:30px;height:30px;line-height:30px;background:#F8EFF2;color:var(--primary);border-radius:50%;font-weight:700;font-size:0.85rem;"><%= item.cantidad %></span>
+                                        </td>
+                                        <td class="text-end" style="color:var(--text-muted);font-weight:500;"><%= formatCurrency(item.costo_unitario) %></td>
+                                        <td class="text-end fw-bold" style="padding-right:2rem;color:var(--text-primary);"><%= formatCurrency(item.subtotal) %></td>
+                                    </tr>
+                                    <% }) %>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="3" class="text-end" style="padding:1.5rem 1rem;font-size:0.9rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);">Total Invertido:</td>
+                                        <td class="text-end" style="padding:1.5rem 2rem 1.5rem 1rem;">
+                                            <span style="font-family:'Playfair Display',serif;font-weight:700;font-size:1.8rem;color:var(--primary);line-height:1;"><%= formatCurrency(compra.total) %></span>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+
+                    <% if(compra.observaciones) { %>
+                    <div style="padding:1.5rem 2rem;background:#FBF7F5;border-top:1px dashed #EEE4E1;border-radius:0 0 16px 16px;">
+                        <h6 style="font-size:0.75rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:0.5rem;"><i class="bi bi-chat-left-text me-1"></i>Observaciones Adicionales</h6>
+                        <p style="margin:0;color:var(--text-primary);font-size:0.85rem;line-height:1.5;"><%= compra.observaciones %></p>
+                    </div>
+                    <% } %>
+                </div>
+            </div>
+
+        </div>
+    </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

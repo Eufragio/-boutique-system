@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <%- include('../partials/head', { title: 'Proveedores | Boutique Panel' }) %>
+</head>
+<body>
+<div class="dashboard-wrapper">
+    <%- include('../partials/sidebar') %>
+
+    <main class="main-content">
+        <%- include('../partials/top_header') %>
+
+        <div class="container-fluid px-4 pb-5 mt-4">
+
+            <% if (success_msg && success_msg.length > 0) { %>
+            <div class="alert alert-boutique-success alert-dismissible fade show d-flex align-items-center gap-2 mb-4">
+                <i class="bi bi-check-circle-fill fs-5"></i><span><%= success_msg %></span>
+                <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"></button>
+            </div>
+            <% } %>
+
+            <!-- Encabezado -->
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <div>
+                    <h2 class="module-title mb-1">
+                        <i class="bi bi-truck module-title-icon"></i> Proveedores
+                    </h2>
+                    <p class="mb-0 small" style="color:var(--text-muted);padding-left:2px;">Gestiona a tus socios de abastecimiento</p>
+                </div>
+                <a href="/proveedores/crear" class="btn btn-boutique">
+                    <i class="bi bi-plus-lg me-1"></i> Nuevo Proveedor
+                </a>
+            </div>
+
+            <hr class="boutique-divider mb-4">
+
+            <!-- Tabla de Proveedores -->
+            <div class="widget-card">
+                <div class="widget-header-primary d-flex align-items-center justify-content-between" style="border-radius:16px 16px 0 0;">
+                    <span class="fw-semibold" style="font-family:'Inter',sans-serif;letter-spacing:.4px;">
+                        <i class="bi bi-building me-2"></i>Directorio de Proveedores
+                    </span>
+                    <span class="badge" style="background:rgba(255,255,255,0.2);font-size:0.75rem;font-weight:600;padding:4px 10px;border-radius:20px;">
+                        <%= proveedores.length %> registrado<%= proveedores.length !== 1 ? 's' : '' %>
+                    </span>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="boutique-table">
+                        <thead>
+                            <tr>
+                                <th>Empresa / Negocio</th>
+                                <th>Representante</th>
+                                <th>Contacto</th>
+                                <th>Estado</th>
+                                <th class="text-end">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (proveedores.length === 0) { %>
+                            <tr>
+                                <td colspan="5" class="text-center py-5">
+                                    <i class="bi bi-truck" style="font-size:2.5rem;color:var(--primary-light);display:block;margin-bottom:0.5rem;"></i>
+                                    <span style="color:var(--text-muted);font-size:0.85rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;">No hay proveedores registrados</span>
+                                </td>
+                            </tr>
+                            <% } else { %>
+                            <% proveedores.forEach(p => { %>
+                            <tr style="<%= !p.activo ? 'opacity:0.55;' : '' %>">
+                                
+                                <!-- Empresa / RUC -->
+                                <td>
+                                    <div class="d-flex align-items-center gap-3">
+                                        <!-- Avatar de empresa -->
+                                        <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#D4A574,#b8884e);display:flex;align-items:center;justify-content:center;color:#fff;font-size:1rem;font-weight:800;flex-shrink:0;">
+                                            <%= p.nombre_empresa.charAt(0).toUpperCase() %>
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold" style="color:var(--text-primary);font-size:0.9rem;"><%= p.nombre_empresa %></div>
+                                            <span class="badge-champagne" style="font-family:'Inter',monospace;font-size:0.65rem;">
+                                                <i class="bi bi-card-heading me-1"></i><%= p.ruc || 'S/N' %>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </td>
+
+                                <!-- Contacto -->
+                                <td>
+                                    <span style="color:var(--text-primary);font-size:0.88rem;font-weight:500;"><%= p.nombre_contacto || '—' %></span>
+                                </td>
+
+                                <!-- Teléfono / Email -->
+                                <td>
+                                    <div style="display:flex;flex-direction:column;gap:4px;">
+                                        <% if (p.telefono) { %>
+                                        <span style="font-size:0.8rem;color:var(--text-primary);">
+                                            <i class="bi bi-telephone text-success me-1"></i><%= p.telefono %>
+                                        </span>
+                                        <% } %>
+                                        <% if (p.email) { %>
+                                        <span style="font-size:0.75rem;color:var(--text-muted);">
+                                            <i class="bi bi-envelope text-primary me-1"></i><%= p.email %>
+                                        </span>
+                                        <% } %>
+                                        <% if (!p.telefono && !p.email) { %>
+                                        <span style="color:var(--text-muted);font-size:0.8rem;">—</span>
+                                        <% } %>
+                                    </div>
+                                </td>
+
+                                <!-- Estado -->
+                                <td>
+                                    <% if (p.activo) { %>
+                                    <span class="badge-rose" style="background:rgba(107,171,142,0.12);color:#3a6e52;">Activo</span>
+                                    <% } else { %>
+                                    <span class="badge-rose" style="background:rgba(0,0,0,0.06);color:var(--text-muted);">Inactivo</span>
+                                    <% } %>
+                                </td>
+
+                                <!-- Acciones -->
+                                <td class="text-end">
+                                    <div class="d-flex justify-content-end gap-1">
+                                        <a href="/proveedores/editar/<%= p.id %>" class="btn btn-sm btn-mauve" title="Editar datos">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <form action="/proveedores/estado/<%= p.id %>" method="POST" class="d-inline">
+                                            <button type="submit" class="btn btn-sm <%= p.activo ? 'btn-rose-danger' : 'btn-green' %>"
+                                                    title="<%= p.activo ? 'Desactivar' : 'Activar' %>"
+                                                    onclick="return confirm('<%= p.activo ? '¿Marcar este proveedor como inactivo?' : '¿Activar este proveedor nuevamente?' %>');">
+                                                <i class="bi <%= p.activo ? 'bi-dash-circle' : 'bi-check2-circle' %>"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            <% }) %>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<aside class="sidebar-main shadow-lg">
+    <!-- BRANDING -->
+    <div class="sidebar-brand">
+        <div class="d-flex align-items-center gap-2">
+            <div style="width:32px; height:32px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 8px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <i class="bi bi-bag-heart-fill" style="color:white; font-size:14px;"></i>
+            </div>
+            <div>
+                <p class="sidebar-brand-title mb-0">Boutique</p>
+                <p class="sidebar-brand-subtitle mb-0">Gestión de Tienda</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- PERFIL -->
+    <div class="sidebar-profile">
+        <div class="sidebar-avatar">
+            <i class="bi bi-person-fill"></i>
+        </div>
+        <h5><%= typeof user !== 'undefined' ? user : 'Administrador' %></h5>
+        <p class="sidebar-profile-role mb-0">Panel de Control</p>
+    </div>
+    
+    <div class="sidebar-nav-container">
+        <p class="sidebar-section-label">Principal</p>
+        <ul class="nav flex-column nav-main mb-2" id="sidebar-menu">
+            <li class="nav-item">
+                <a class="nav-link" href="/" data-path="dashboard">
+                    <div class="nav-link-inner"><i class="bi bi-house-door-fill icon-left"></i> Dashboard</div>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/ventas" data-path="ventas">
+                    <div class="nav-link-inner"><i class="bi bi-bag-check-fill icon-left"></i> Ventas</div>
+                    <span class="dot" style="background-color: var(--primary);"></span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/gastos" data-path="gastos">
+                    <div class="nav-link-inner"><i class="bi bi-receipt icon-left"></i> Gastos</div>
+                    <span class="dot" style="background-color: var(--secondary);"></span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/productos" data-path="productos">
+                    <div class="nav-link-inner"><i class="bi bi-grid-3x3-gap-fill icon-left"></i> Inventario</div>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/clientes" data-path="clientes">
+                    <div class="nav-link-inner"><i class="bi bi-people-fill icon-left"></i> Clientes</div>
+                </a>
+            </li>
+            <% if (typeof userRol !== 'undefined' && userRol === 'admin') { %>
+                <p class="sidebar-section-label mt-2">Administración</p>
+                <li class="nav-item"><a class="nav-link" href="/categorias" data-path="categorias"><div class="nav-link-inner"><i class="bi bi-tags-fill icon-left"></i> Categorías</div></a></li>
+                <li class="nav-item"><a class="nav-link" href="/proveedores" data-path="proveedores"><div class="nav-link-inner"><i class="bi bi-truck icon-left"></i> Proveedores</div></a></li>
+                <li class="nav-item"><a class="nav-link" href="/compras" data-path="compras"><div class="nav-link-inner"><i class="bi bi-box-arrow-in-down-right icon-left"></i> Compras</div></a></li>
+                <li class="nav-item"><a class="nav-link" href="/reportes" data-path="reportes"><div class="nav-link-inner"><i class="bi bi-bar-chart-line-fill icon-left"></i> Reportes</div></a></li>
+                <li class="nav-item"><a class="nav-link" href="/usuarios" data-path="usuarios"><div class="nav-link-inner"><i class="bi bi-person-lock icon-left"></i> Usuarios</div></a></li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/configuracion" data-path="configuracion">
+                        <div class="nav-link-inner"><i class="bi bi-gear-fill icon-left"></i> Settings</div>
+                        <span class="dot" style="background-color: rgba(158,138,150, 0.5);"></span>
+                    </a>
+                </li>
+            <% } %>
+        </ul>
+    </div>
+
+    <!-- FOOTER DEL SIDEBAR -->
+    <div style="padding: 1rem 1.5rem; border-top: 1px solid rgba(255,255,255,0.06);">
+        <small style="color: var(--sidebar-muted); font-size: 0.62rem; letter-spacing: 1px; text-transform: uppercase;">✦ Boutique System v1.0</small>
+    </div>
+</aside>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const path = window.location.pathname;
+        const links = document.querySelectorAll('#sidebar-menu .nav-link');
+        let matched = false;
+        
+        links.forEach(link => {
+            const dataPath = link.getAttribute('data-path');
+            if (dataPath !== 'dashboard' && path.startsWith('/' + dataPath)) {
+                link.classList.add('active');
+                matched = true;
+            }
+        });
+        
+        if (!matched && (path === '/' || path === '/index')) {
+            const dashboardLink = document.querySelector('#sidebar-menu .nav-link[data-path="dashboard"]');
+            if(dashboardLink) dashboardLink.classList.add('active');
+        }
+    });
+</script>

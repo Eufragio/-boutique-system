@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión | Boutique System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #2E1F29 0%, #3D2B35 40%, #5A3040 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Decorative circles */
+        body::before, body::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        body::before {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(201,132,122,0.12) 0%, transparent 70%);
+            top: -150px;
+            right: -100px;
+        }
+        body::after {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(155,127,166,0.1) 0%, transparent 70%);
+            bottom: -100px;
+            left: -80px;
+        }
+
+        .login-wrapper {
+            width: 100%;
+            max-width: 440px;
+            padding: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Tagline above the card */
+        .login-top-tag {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        .login-top-tag span {
+            font-size: 0.65rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: rgba(240,196,190,0.6);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .card-login {
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.08);
+            background: rgba(255, 255, 255, 0.97);
+            box-shadow: 0 25px 60px rgba(0,0,0,0.35), 0 0 0 1px rgba(201,132,122,0.1);
+            overflow: hidden;
+        }
+
+        .login-header {
+            background: linear-gradient(135deg, #2E1F29 0%, #3D2B35 100%);
+            padding: 2.5rem 2rem 2rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .login-icon-wrap {
+            width: 72px;
+            height: 72px;
+            background: linear-gradient(135deg, var(--primary, #C9847A), var(--secondary, #9B7FA6));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            box-shadow: 0 8px 25px rgba(201,132,122,0.4);
+        }
+
+        .login-icon-wrap i {
+            font-size: 2rem;
+            color: white;
+        }
+
+        .login-title {
+            font-family: 'Playfair Display', serif;
+            color: #F5EEF2;
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 0.2rem;
+        }
+
+        .login-subtitle {
+            color: rgba(240,196,190,0.6);
+            font-size: 0.72rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* Decorative divider */
+        .login-divider {
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #C9847A, #9B7FA6, transparent);
+        }
+
+        .login-body {
+            padding: 2.5rem 2rem 2rem;
+        }
+
+        .login-label {
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #9E8A96;
+            margin-bottom: 0.4rem;
+        }
+
+        .login-input-group .input-group-text {
+            background-color: #F8EFF2;
+            border-color: #EEE4E1;
+            border-right: none;
+            color: #C9847A;
+        }
+
+        .login-input-group .form-control {
+            background-color: #FDFAF9;
+            border-color: #EEE4E1;
+            border-left: none;
+            color: #3D2030;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .login-input-group .form-control:focus {
+            border-color: #C9847A;
+            box-shadow: 0 0 0 0.2rem rgba(201,132,122,0.18);
+        }
+
+        .login-input-group .form-control:focus + .input-group-text,
+        .login-input-group .input-group-text:has(+ .form-control:focus) {
+            border-color: #C9847A;
+        }
+
+        .btn-login {
+            background: linear-gradient(135deg, #C9847A 0%, #A86058 100%);
+            border: none;
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 0.85rem;
+            border-radius: 10px;
+            width: 100%;
+            box-shadow: 0 5px 18px rgba(201,132,122,0.4);
+            transition: all 0.3s ease;
+        }
+
+        .btn-login:hover {
+            background: linear-gradient(135deg, #A86058 0%, #8A4D46 100%);
+            color: #fff;
+            box-shadow: 0 8px 25px rgba(201,132,122,0.55);
+            transform: translateY(-2px);
+        }
+
+        .btn-login:active { transform: translateY(0); }
+
+        .login-footer {
+            text-align: center;
+            padding-bottom: 2rem;
+            color: #9E8A96;
+            font-size: 0.72rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* Floating decorative rose petals */
+        .petal {
+            position: fixed;
+            width: 8px;
+            height: 8px;
+            background-color: rgba(201,132,122,0.3);
+            border-radius: 50% 0 50% 0;
+            pointer-events: none;
+            animation: floatPetal 8s ease-in-out infinite;
+        }
+        
+        @keyframes floatPetal {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.4; }
+            100% { transform: translateY(-100px) rotate(720deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating petals -->
+    <div class="petal" style="left:10%; animation-delay:0s; animation-duration:9s;"></div>
+    <div class="petal" style="left:30%; animation-delay:2s; animation-duration:11s; width:5px; height:5px;"></div>
+    <div class="petal" style="left:60%; animation-delay:1.5s; animation-duration:8s; background-color:rgba(155,127,166,0.3);"></div>
+    <div class="petal" style="left:80%; animation-delay:3s; animation-duration:10s;"></div>
+    <div class="petal" style="left:45%; animation-delay:4s; animation-duration:12s; width:6px; height:6px;"></div>
+
+    <div class="login-wrapper">
+        <div class="login-top-tag">
+            <span>✦ Sistema de Gestión ✦</span>
+        </div>
+
+        <div class="card-login">
+            <div class="login-header">
+                <div class="login-icon-wrap">
+                    <i class="bi bi-bag-heart-fill"></i>
+                </div>
+                <h2 class="login-title">Boutique System</h2>
+                <p class="login-subtitle mb-0">Panel Administrativo</p>
+            </div>
+            <div class="login-divider"></div>
+
+            <div class="login-body">
+                <% if (typeof error !== 'undefined' && error) { %>
+                    <div class="alert alert-boutique-danger d-flex align-items-center mb-4" role="alert"
+                         style="background-color: rgba(192,97,111,0.1); border-left: 4px solid #C0616F; border-radius:10px; color:#8a3a45; padding: 0.85rem 1rem;">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                        <div><%= error %></div>
+                    </div>
+                <% } %>
+
+                <form action="/login" method="POST">
+                    <div class="mb-3">
+                        <label class="login-label">Usuario / Email</label>
+                        <div class="input-group login-input-group">
+                            <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
+                            <input type="text" name="usuario" class="form-control" placeholder="Ingresa tu usuario" required autofocus>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="login-label">Contraseña</label>
+                        <div class="input-group login-input-group">
+                            <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+                            <input type="password" name="password" class="form-control" placeholder="••••••••" required>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-login">
+                        <i class="bi bi-arrow-right-circle-fill me-2"></i>Ingresar
+                    </button>
+                </form>
+            </div>
+
+            <div class="login-footer">
+                <span>Boutique System © 2026 &nbsp;·&nbsp; v2.0</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

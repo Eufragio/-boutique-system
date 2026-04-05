@@ -1,0 +1,51 @@
+<header class="top-header">
+    <button class="btn mobile-menu-toggle me-2" id="btn-toggle-menu" type="button" aria-label="Abrir Menú">
+        <i class="bi bi-list"></i>
+    </button>
+
+    <div class="search-bar">
+        <i class="bi bi-search me-2"></i>
+        <input type="text" placeholder="Buscar en el sistema...">
+    </div>
+    
+    <div class="header-actions d-flex align-items-center gap-3">
+        <% if (locals.cajaAbierta) { %>
+            <a href="/caja/cierre" class="btn btn-boutique btn-sm" title="Cerrar Caja">
+                <i class="bi bi-lock-fill me-1 d-none d-sm-inline"></i>
+                <i class="bi bi-lock-fill d-sm-none"></i>
+                <span class="d-none d-sm-inline">Cerrar Caja</span>
+            </a>
+        <% } else { %>
+            <a href="/caja/apertura" class="btn btn-outline-rose btn-sm" title="Abrir Caja">
+                <i class="bi bi-wallet2 me-1 d-none d-sm-inline"></i>
+                <i class="bi bi-wallet2 d-sm-none"></i>
+                <span class="d-none d-sm-inline">Abrir Caja</span>
+            </a>
+        <% } %>
+        <a href="/logout" class="btn btn-sm text-danger" style="background-color: #F8EFF2; border: 1px solid #EEE4E1;" title="Cerrar Sesión">
+            <i class="bi bi-box-arrow-right"></i>
+        </a>
+    </div>
+</header>
+
+<!-- Overlay para móvil -->
+<div class="sidebar-overlay" id="sidebar-bg-overlay"></div>
+
+<!-- Lógica del botón hamburguesa -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const btnMenu = document.getElementById('btn-toggle-menu');
+        const sidebar = document.querySelector('.sidebar-main');
+        const overlay = document.getElementById('sidebar-bg-overlay');
+
+        if(btnMenu && sidebar && overlay) {
+            function toggleMenu() {
+                sidebar.classList.toggle('mobile-active');
+                overlay.classList.toggle('mobile-active');
+            }
+            
+            btnMenu.addEventListener('click', toggleMenu);
+            overlay.addEventListener('click', toggleMenu);
+        }
+    });
+</script>

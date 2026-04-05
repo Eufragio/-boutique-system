@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Cierre de Caja | Boutique System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+</head>
+<body class="bg-light">
+    <!-- Plantilla base boutique con Sidebar y Header -->
+    <%- include('../partials/head', { title: 'Cierre de Caja | Boutique Panel' }) %>
+</head>
+<body>
+
+    <div class="dashboard-wrapper">
+        <%- include('../partials/sidebar') %>
+
+        <main class="main-content">
+            <%- include('../partials/top_header') %>
+
+            <div class="container-fluid px-4 pb-5 mt-4">
+
+                <!-- Encabezado de página -->
+                <div class="d-flex align-items-center justify-content-between mb-4">
+                    <div>
+                        <h2 class="module-title mb-1">
+                            <i class="bi bi-lock-fill module-title-icon"></i>
+                            Cierre de Caja
+                        </h2>
+                        <p class="text-muted small mb-0" style="font-family:'Inter',sans-serif; padding-left:2px;">
+                            Arqueo diario y registro de ingresos/egresos
+                        </p>
+                    </div>
+                </div>
+
+                <hr class="boutique-divider mb-4">
+
+                <div class="row justify-content-center">
+                    <div class="col-md-7 col-lg-6">
+                        <div class="widget-card">
+                            <div class="widget-header-dark py-3 d-flex justify-content-between align-items-center" style="border-radius:16px 16px 0 0;">
+                                <h5 class="mb-0 fw-semibold" style="font-family:'Inter',sans-serif; letter-spacing:0.5px;">Resumen de Movimientos</h5>
+                                <span class="badge bg-light text-dark px-3 py-2 rounded-pill"><i class="bi bi-calendar-check me-1"></i> <%= formatDateShort(new Date()) %></span>
+                            </div>
+                            
+                            <div class="card-body p-4">
+
+                                <div class="d-flex justify-content-end mb-4">
+                                    <a href="/gastos" class="btn btn-sm btn-outline-rose rounded-pill px-3 shadow-sm">
+                                        <i class="bi bi-dash-circle me-1"></i> Registrar Salida/Gasto
+                                    </a>
+                                </div>
+
+                                <div class="p-4 mb-4 rounded-4" style="background-color: var(--bg-blush); border: 1px solid #EEE4E1;">
+                                    <h6 class="small fw-bold text-uppercase mb-3" style="color: var(--text-primary); letter-spacing:1px;">
+                                        <i class="bi bi-calculator text-muted me-1"></i> Arqueo de Dinero Físico
+                                    </h6>
+                                    
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <span class="text-muted" style="font-size:0.9rem;">Monto Inicial (Base):</span>
+                                        <strong style="color:var(--text-primary);"><%= formatCurrency(caja.monto_inicial) %></strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <span class="text-muted" style="font-size:0.9rem;">(+) Ventas en Efectivo:</span>
+                                        <strong class="text-success"><%= formatCurrency(resumenVentas.efectivo) %></strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <span class="text-muted" style="font-size:0.9rem;">(-) Gastos / Salidas:</span>
+                                        <strong class="text-danger">- <%= formatCurrency(gastosTotal) %></strong>
+                                    </div>
+                                    
+                                    <div class="d-flex justify-content-between align-items-center pt-3 mt-1" style="border-top:1px dashed #d1b8c4;">
+                                        <span class="fs-6 fw-bold" style="color:var(--text-primary);">Esperado en Cajón:</span>
+                                        <span class="fs-4 fw-bold" style="color:var(--primary);"><%= formatCurrency(saldoEsperado) %></span>
+                                    </div>
+
+                                    <% if (resumenVentas.digital > 0) { %>
+                                        <div class="mt-4 p-3 rounded-3" style="background-color:rgba(255,255,255,0.6);">
+                                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                                <span class="small fw-semibold text-muted"><i class="bi bi-phone"></i> Dinero Digital (Yape/Tarjetas):</span>
+                                                <strong style="color:var(--text-primary);"><%= formatCurrency(resumenVentas.digital) %></strong>
+                                            </div>
+                                            <div class="small text-muted fst-italic" style="font-size:0.75rem;">* Este dinero abona directo a cuenta bancaria y no afecta caja física.</div>
+                                        </div>
+                                    <% } %>
+                                </div>
+
+                                <form action="/caja/cierre" method="POST" onsubmit="return confirm('¿Está seguro de que desea cerrar la caja con este conteo?');">
+                                    <input type="hidden" name="id" value="<%= caja.id %>">
+                                    <input type="hidden" name="monto_sistema" value="<%= saldoEsperado %>">
+
+                                    <div class="mb-4">
+                                        <label class="form-label text-muted small fw-bold text-uppercase">Dinero Real (Conteo Físico)</label>
+                                        <div class="input-group input-group-lg shadow-sm rounded-3 overflow-hidden" style="border: 1px solid var(--primary-light);">
+                                            <span class="input-group-text bg-white border-0 text-muted"><i class="bi bi-cash-stack ms-1"></i></span>
+                                            <input type="number" name="monto_real" class="form-control border-0 px-2" step="0.10" required placeholder="0.00" style="font-weight:600; color:var(--text-primary);">
+                                        </div>
+                                        <div class="form-text text-muted mt-2 ps-1" style="font-size:0.75rem;"><i class="bi bi-info-circle me-1"></i>Cuenta solo billetes y monedas disponibles en caja registradora.</div>
+                                    </div>
+
+                                    <div class="d-flex flex-column flex-sm-row gap-3 mt-5">
+                                        <a href="/" class="btn btn-light border flex-grow-1 py-2 fw-semibold" style="border-radius:10px; color:var(--text-muted);">Cancelar</a>
+                                        <button type="submit" class="btn btn-rose-danger flex-grow-1 py-2 shadow border-0" style="border-radius:10px;">
+                                            <i class="bi bi-lock-fill me-1"></i> Ejecutar Cierre de Caja
+                                        </button>
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

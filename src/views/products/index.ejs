@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <%- include('../partials/head', { title: 'Inventario | Boutique Panel' }) %>
+</head>
+<body>
+<div class="dashboard-wrapper">
+    <%- include('../partials/sidebar') %>
+
+    <main class="main-content">
+        <%- include('../partials/top_header') %>
+
+        <div class="container-fluid px-4 pb-5 mt-4">
+
+            <% if (success_msg && success_msg.length > 0) { %>
+            <div class="alert alert-boutique-success alert-dismissible fade show d-flex align-items-center gap-2 mb-4">
+                <i class="bi bi-check-circle-fill fs-5"></i><span><%= success_msg %></span>
+                <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"></button>
+            </div>
+            <% } %>
+            <% if (error_msg && error_msg.length > 0) { %>
+            <div class="alert alert-boutique-danger alert-dismissible fade show d-flex align-items-center gap-2 mb-4">
+                <i class="bi bi-exclamation-triangle-fill fs-5"></i><span><%= error_msg %></span>
+                <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"></button>
+            </div>
+            <% } %>
+
+            <!-- Encabezado -->
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <div>
+                    <h2 class="module-title mb-1">
+                        <i class="bi bi-grid-3x3-gap-fill module-title-icon"></i> Inventario
+                    </h2>
+                    <p class="mb-0 small" style="color:var(--text-muted);padding-left:2px;">Control de productos y stock disponible</p>
+                </div>
+                <% if (typeof userRol !== 'undefined' && userRol === 'admin') { %>
+                <a href="/productos/crear" class="btn btn-boutique">
+                    <i class="bi bi-plus-lg me-1"></i> Nuevo Producto
+                </a>
+                <% } %>
+            </div>
+
+            <hr class="boutique-divider mb-4">
+
+            <!-- Widgets de valorización (solo admin) -->
+            <% if (typeof userRol !== 'undefined' && userRol === 'admin' && typeof valorizacion !== 'undefined') { %>
+            <div class="row g-3 mb-4">
+                <div class="col-md-6">
+                    <div class="widget-card mb-0" style="display:flex;align-items:center;gap:1rem;padding:1.1rem 1.4rem;">
+                        <div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#b8884e);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                            <i class="bi bi-arrow-down-circle" style="color:#fff;font-size:1.2rem;"></i>
+                        </div>
+                        <div>
+                            <div style="font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--text-muted);">Inversión Total (Costo)</div>
+                            <div style="font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:700;color:var(--accent);">
+                                <%= formatCurrency(valorizacion.costo_total || 0) %>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="widget-card mb-0" style="display:flex;align-items:center;gap:1rem;padding:1.1rem 1.4rem;">
+                        <div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,var(--success),#4e9574);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                            <i class="bi bi-graph-up-arrow" style="color:#fff;font-size:1.2rem;"></i>
+                        </div>
+                        <div>
+                            <div style="font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--text-muted);">Venta Estimada</div>
+                            <div style="font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:700;color:var(--success);">
+                                <%= formatCurrency(valorizacion.venta_total_estimada || 0) %>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <% } %>
+
+            <!-- Barra de búsqueda -->
+            <div class="widget-card mb-4" style="padding:0.75rem 1rem;">
+                <form action="/productos" method="GET" class="d-flex gap-2 align-items-center">
+                    <div style="position:relative;flex:1;">
+                        <i class="bi bi-search" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--primary);font-size:0.85rem;"></i>
+                        <input type="search" name="q" class="form-control"
+                               style="padding-left:2.2rem;border-color:#EEE4E1;border-radius:50px;font-size:0.85rem;"
+                               placeholder="Buscar por nombre o código de barras..."
+                               value="<%= typeof search !== 'undefined' ? search : '' %>">
+                    </div>
+                    <button type="submit" class="btn btn-boutique" style="border-radius:50px;padding:.45rem 1.2rem;font-size:0.83rem;">
+                        <i class="bi bi-arrow-right me-1"></i>Buscar
+                    </button>
+                    <% if (typeof search !== 'undefined' && search) { %>
+                    <a href="/productos" class="btn btn-outline-rose" style="border-radius:50px;padding:.45rem 1rem;font-size:0.83rem;">
+                        <i class="bi bi-x-lg"></i>
+                    </a>
+                    <% } %>
+                </form>
+            </div>
+
+            <!-- Tabla de productos -->
+            <div class="widget-card">
+                <div class="widget-header-primary d-flex align-items-center justify-content-between" style="border-radius:16px 16px 0 0;">
+                    <span class="fw-semibold" style="font-family:'Inter',sans-serif;letter-spacing:.4px;">
+                        <i class="bi bi-box-seam me-2"></i>Catálogo de Productos
+                    </span>
+                    <span class="badge" style="background:rgba(255,255,255,0.2);font-size:0.72rem;font-weight:600;padding:4px 10px;border-radius:20px;">
+                        <%= productos.length %> producto<%= productos.length !== 1 ? 's' : '' %>
+                    </span>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="boutique-table">
+                        <thead>
+                            <tr>
+                                <th width="60">Imagen</th>
+                                <th>Producto</th>
+                                <th>Categoría</th>
+                                <% if (typeof userRol !== 'undefined' && userRol === 'admin') { %>
+                                <th>Costo</th>
+                                <% } %>
+                                <th>Precio</th>
+                                <th>Stock</th>
+                                <th>Estado</th>
+                                <th class="text-end">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (productos.length === 0) { %>
+                            <tr>
+                                <td colspan="8" class="text-center py-5">
+                                    <i class="bi bi-box" style="font-size:2.5rem;color:var(--primary-light);display:block;margin-bottom:0.5rem;"></i>
+                                    <span style="color:var(--text-muted);font-size:0.85rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;">No se encontraron productos</span>
+                                </td>
+                            </tr>
+                            <% } else { %>
+                            <% productos.forEach(p => { %>
+                            <tr style="<%= !p.activo ? 'opacity:0.55;' : '' %>">
+                                <!-- Imagen -->
+                                <td>
+                                    <% if (p.imagen_url) { %>
+                                    <img src="<%= p.imagen_url %>" alt="<%= p.nombre %>"
+                                         style="width:44px;height:44px;object-fit:contain;border-radius:10px;border:1px solid #EEE4E1;background:var(--bg-blush);padding:3px;">
+                                    <% } else { %>
+                                    <div style="width:44px;height:44px;border-radius:10px;background:var(--bg-blush);border:1px solid #EEE4E1;display:flex;align-items:center;justify-content:center;">
+                                        <i class="bi bi-bag-heart" style="color:var(--primary-light);font-size:1.1rem;"></i>
+                                    </div>
+                                    <% } %>
+                                </td>
+
+                                <!-- Nombre + código -->
+                                <td>
+                                    <div class="fw-bold" style="color:var(--text-primary);font-size:0.88rem;max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                                        <%= p.nombre %>
+                                    </div>
+                                    <div>
+                                        <span class="badge-champagne" style="font-size:0.62rem;font-family:'Inter',monospace;">
+                                            <i class="bi bi-upc me-1"></i><%= p.codigo_barras || 'S/C' %>
+                                        </span>
+                                    </div>
+                                </td>
+
+                                <!-- Categoría -->
+                                <td><span class="badge-mauve"><%= p.categoria_nombre || 'General' %></span></td>
+
+                                <!-- Costo (solo admin) -->
+                                <% if (typeof userRol !== 'undefined' && userRol === 'admin') { %>
+                                <td>
+                                    <small style="color:var(--text-muted);font-size:0.78rem;"><%= formatCurrency(p.precio_compra) %></small>
+                                </td>
+                                <% } %>
+
+                                <!-- Precio venta -->
+                                <td>
+                                    <span style="font-weight:700;color:var(--primary);font-size:0.92rem;"><%= formatCurrency(p.precio_venta) %></span>
+                                </td>
+
+                                <!-- Stock con indicador visual -->
+                                <td>
+                                    <% const stockBajo = p.stock_actual <= (p.stock_minimo || 5); %>
+                                    <span class="badge-rose"
+                                          style="<%= p.stock_actual === 0 ? 'background:rgba(192,97,111,0.15);color:var(--danger);' : (stockBajo ? 'background:rgba(212,165,116,0.18);color:#7A5C2E;' : 'background:rgba(107,171,142,0.12);color:#3a6e52;') %>">
+                                        <%= p.stock_actual === 0 ? '✕ Sin stock' : (stockBajo ? '⚠ ' + p.stock_actual : '✓ ' + p.stock_actual) %>
+                                    </span>
+                                </td>
+
+                                <!-- Estado -->
+                                <td>
+                                    <% if (p.activo) { %>
+                                    <span class="badge-rose" style="background:rgba(107,171,142,0.12);color:#3a6e52;font-size:0.68rem;">● Activo</span>
+                                    <% } else { %>
+                                    <span class="badge-rose" style="background:rgba(0,0,0,0.06);color:var(--text-muted);font-size:0.68rem;">○ Oculto</span>
+                                    <% } %>
+                                </td>
+
+                                <!-- Acciones -->
+                                <td class="text-end">
+                                    <div class="d-flex justify-content-end gap-1">
+                                        <a href="/kardex/<%= p.id %>" class="btn btn-sm btn-champagne" title="Historial de movimientos">
+                                            <i class="bi bi-clock-history"></i>
+                                        </a>
+                                        <a href="/productos/etiquetas/<%= p.id %>" class="btn btn-sm btn-champagne" title="Imprimir etiqueta">
+                                            <i class="bi bi-upc-scan"></i>
+                                        </a>
+                                        <% if (typeof userRol !== 'undefined' && userRol === 'admin') { %>
+                                        <a href="/productos/editar/<%= p.id %>" class="btn btn-sm btn-mauve" title="Editar">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <form action="/productos/estado/<%= p.id %>" method="POST" class="d-inline">
+                                            <button type="submit" class="btn btn-sm <%= p.activo ? 'btn-rose-danger' : 'btn-green' %>"
+                                                    title="<%= p.activo ? 'Ocultar' : 'Mostrar' %>"
+                                                    onclick="return confirm('<%= p.activo ? '¿Ocultar este producto del POS?' : '¿Mostrar este producto?' %>');">
+                                                <i class="bi bi-<%= p.activo ? 'eye-slash' : 'eye' %>"></i>
+                                            </button>
+                                        </form>
+                                        <% } %>
+                                    </div>
+                                </td>
+                            </tr>
+                            <% }) %>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Paginación -->
+                <% if (typeof pagination !== 'undefined' && pagination.totalPages > 1) { %>
+                <div style="padding:1rem 1.25rem;border-top:1px solid #F5EBF0;display:flex;align-items:center;justify-content:center;gap:6px;">
+                    <a href="/productos?page=<%= pagination.prevPage %>&q=<%= typeof search !== 'undefined' ? search : '' %>"
+                       class="btn btn-sm <%= !pagination.hasPrev ? 'btn-rose-disabled' : 'btn-outline-rose' %>"
+                       style="border-radius:10px;" <%= !pagination.hasPrev ? 'tabindex="-1"' : '' %>>
+                        <i class="bi bi-chevron-left"></i>
+                    </a>
+                    <span style="font-size:0.8rem;font-weight:600;color:var(--text-muted);padding:0 0.5rem;">
+                        Página <%= pagination.page %> de <%= pagination.totalPages %>
+                    </span>
+                    <a href="/productos?page=<%= pagination.nextPage %>&q=<%= typeof search !== 'undefined' ? search : '' %>"
+                       class="btn btn-sm <%= !pagination.hasNext ? 'btn-rose-disabled' : 'btn-outline-rose' %>"
+                       style="border-radius:10px;" <%= !pagination.hasNext ? 'tabindex="-1"' : '' %>>
+                        <i class="bi bi-chevron-right"></i>
+                    </a>
+                </div>
+                <% } %>
+            </div>
+        </div>
+    </main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <%- include('../partials/head', { title: 'Etiquetas: ' + producto.nombre + ' | Boutique Panel' }) %>
+    <script src="https://cdn.jsdelivr.net/npm/bwip-js@3.0.4/dist/bwip-js-min.js"></script>
+    <style>
+        .config-panel {
+            background:#ffffff;
+            border-radius:16px;
+            box-shadow:0 10px 40px rgba(22,14,14,0.04);
+            border:1px solid #F5EBF0;
+            padding:1.5rem;
+            margin-bottom:1.5rem;
+        }
+
+        #printableArea {
+            background:white;
+            padding:20px;
+            border-radius:12px;
+            min-height:297mm;
+            margin:0 auto;
+            width:210mm;
+            box-shadow:0 4px 15px rgba(0,0,0,0.05);
+            display:flex;
+            flex-wrap:wrap;
+            align-content:flex-start;
+            gap:10px;
+            justify-content:center;
+        }
+
+        .label-card {
+            border:1px dashed #D4A574;
+            width:50mm;
+            height:30mm;
+            padding:2px;
+            text-align:center;
+            display:flex;
+            flex-direction:column;
+            justify-content:center;
+            align-items:center;
+            background:white;
+            page-break-inside:avoid;
+            border-radius:4px;
+        }
+
+        .label-shop { font-size:8px;text-transform:uppercase;font-weight:800;margin-bottom:2px;color:#1A1110;letter-spacing:0.5px; }
+        .label-name { font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;color:#1A1110; }
+        .label-price { font-size:14px;font-weight:900;margin:2px 0;font-family:'Playfair Display',serif; }
+        .label-code { font-size:8px;margin-top:2px;letter-spacing:1px;font-family:'Inter',monospace;color:#5A4A4A; }
+        canvas { max-width:90%;height:30px !important; }
+
+        @media print {
+            body * { visibility:hidden; }
+            #printableArea, #printableArea * { visibility:visible; }
+            @page { margin:5mm;size:auto; }
+            body { background:white;margin:0; }
+            
+            #printableArea {
+                position:absolute;left:0;top:0;width:100%;box-shadow:none;margin:0;padding:0;gap:2mm;border-radius:0;
+            }
+            .label-card { border:1px solid #ddd;border-radius:0; }
+            
+            body.thermal-mode #printableArea { width:50mm;display:block; }
+            body.thermal-mode .label-card { width:100%;margin-bottom:2mm;border:none;border-bottom:1px dashed #000; }
+        }
+    </style>
+</head>
+<body>
+<div class="dashboard-wrapper">
+    <!-- Navbar y controles (NO se imprimen) -->
+    <div class="no-print w-100">
+        <%- include('../partials/sidebar') %>
+        <main class="main-content" style="min-height:auto;">
+            <%- include('../partials/top_header') %>
+
+            <div class="container-fluid px-4 pb-2 mt-4">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <div class="d-flex align-items-center gap-3">
+                        <a href="/productos" class="btn btn-sm" style="background:#F8EFF2;color:var(--text-muted);border:1px solid #EEE4E1;">
+                            <i class="bi bi-arrow-left"></i>
+                        </a>
+                        <div>
+                            <h2 class="module-title mb-0">
+                                <i class="bi bi-upc-scan module-title-icon"></i> Generador de Etiquetas
+                            </h2>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="config-panel">
+                    <div class="row align-items-end g-3">
+                        <div class="col-md-4">
+                            <label class="form-label" style="font-size:0.8rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;">Producto</label>
+                            <input type="text" class="form-control" style="background:#FBF7F5;color:var(--text-primary);font-weight:600;border-color:#EEE4E1;" value="<%= producto.nombre %>" readonly>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label" style="font-size:0.8rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;">Cantidad</label>
+                            <input type="number" id="labelQty" class="form-control text-center" style="font-weight:700;color:var(--primary);border-color:#EEE4E1;" value="<%= producto.stock_actual > 0 ? producto.stock_actual : 1 %>" min="1" max="100">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label" style="font-size:0.8rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;">Formato</label>
+                            <select id="printMode" class="form-select" style="border-color:#EEE4E1;" onchange="updateLayout()">
+                                <option value="sheet">Hoja A4 (Grilla)</option>
+                                <option value="thermal">Impresora Térmica (Rollo)</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 d-flex gap-2 justify-content-end">
+                            <button onclick="generateLabels()" class="btn btn-outline-rose w-50" style="padding-top:.45rem;padding-bottom:.45rem;">Generar</button>
+                            <button onclick="window.print()" class="btn btn-boutique w-50" style="padding-top:.45rem;padding-bottom:.45rem;"><i class="bi bi-printer me-1"></i> Imprimir</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Área exclusiva para imprimir -->
+    <div style="width:100%;display:flex;justify-content:center;background:#F8EFF2;padding-bottom:50px;" class="ms-lg-auto" style="margin-left:260px;">
+        <div id="printableArea"></div>
+    </div>
+</div>
+
+<script>
+    const productName = "<%= producto.nombre %>";
+    const productPrice = "<%= formatCurrency(producto.precio_venta) %>"; 
+    const productCode = "<%= producto.codigo_barras || 'PROD-'+producto.id %>";
+    const shopName = "<%= typeof shop !== 'undefined' ? shop.nombre_negocio : 'MI TIENDA' %>";
+    
+    function generateLabels() {
+        const qty = document.getElementById('labelQty').value;
+        const container = document.getElementById('printableArea');
+        container.innerHTML = ''; 
+
+        for (let i = 0; i < qty; i++) {
+            const div = document.createElement('div');
+            div.className = 'label-card';
+            const canvasId = `barcode-${i}`;
+
+            div.innerHTML = `
+                <div class="label-shop">${shopName}</div>
+                <div class="label-name">${productName}</div>
+                <canvas id="${canvasId}"></canvas>
+                <div class="label-price">${productPrice}</div>
+                <div class="label-code">${productCode}</div>
+            `;
+            container.appendChild(div);
+
+            try {
+                bwipjs.toCanvas(canvasId, {
+                    bcid: 'code128', text: productCode, scale: 2, height: 8, includetext: false, textxalign: 'center'
+                });
+            } catch (e) { console.error(e); }
+        }
+    }
+
+    function updateLayout() {
+        const mode = document.getElementById('printMode').value;
+        if (mode === 'thermal') {
+            document.body.classList.add('thermal-mode');
+            document.getElementById('printableArea').style.width = 'auto';
+        } else {
+            document.body.classList.remove('thermal-mode');
+            document.getElementById('printableArea').style.width = '210mm';
+        }
+    }
+    window.onload = generateLabels;
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

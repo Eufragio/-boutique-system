@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <%- include('../partials/head', { title: 'Editar Proveedor | Boutique Panel' }) %>
+</head>
+<body>
+<div class="dashboard-wrapper">
+    <%- include('../partials/sidebar') %>
+
+    <main class="main-content">
+        <%- include('../partials/top_header') %>
+
+        <div class="container-fluid px-4 pb-5 mt-4">
+
+            <!-- Encabezado -->
+            <div class="d-flex align-items-center gap-3 mb-3">
+                <a href="/proveedores" class="btn btn-sm" style="background:#F8EFF2;color:var(--text-muted);border:1px solid #EEE4E1;">
+                    <i class="bi bi-arrow-left"></i>
+                </a>
+                <div>
+                    <h2 class="module-title mb-0">
+                        <i class="bi bi-pencil-square module-title-icon"></i> Editar Proveedor
+                    </h2>
+                    <p class="mb-0 small" style="color:var(--text-muted);padding-left:2px;"><%= proveedor.nombre_empresa %></p>
+                </div>
+            </div>
+
+            <hr class="boutique-divider mb-4">
+
+            <div class="row justify-content-center">
+                <div class="col-lg-7">
+                    <div class="widget-card">
+                        <div class="module-card-header" style="border-radius:16px 16px 0 0;">
+                            <h6 class="module-title" style="font-size:0.95rem;">
+                                <i class="bi bi-building module-title-icon"></i> Datos de la Empresa
+                            </h6>
+                            <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#D4A574,#b8884e);display:flex;align-items:center;justify-content:center;color:#fff;font-size:1rem;font-weight:800;">
+                                <%= proveedor.nombre_empresa.charAt(0).toUpperCase() %>
+                            </div>
+                        </div>
+
+                        <div class="card-body p-4">
+                            <form action="/proveedores/editar/<%= proveedor.id %>" method="POST">
+                                <div class="row g-3">
+                                    <div class="col-12">
+                                        <label class="form-label">Nombre de la Empresa / Razón Social <span style="color:var(--danger);">*</span></label>
+                                        <input type="text" name="nombre_empresa" class="form-control form-control-lg" style="font-size:0.95rem;" value="<%= proveedor.nombre_empresa %>" required>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label">RUC / DNI</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text" style="background:#FBF7F5;border-color:#EEE4E1;"><i class="bi bi-card-heading"></i></span>
+                                            <input type="text" name="ruc" class="form-control" value="<%= proveedor.ruc || '' %>">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Representante / Contacto</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text" style="background:#FBF7F5;border-color:#EEE4E1;"><i class="bi bi-person"></i></span>
+                                            <input type="text" name="nombre_contacto" class="form-control" value="<%= proveedor.nombre_contacto || '' %>">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label">Teléfono de Contacto</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text" style="background:#FBF7F5;border-color:#EEE4E1;"><i class="bi bi-telephone text-success"></i></span>
+                                            <input type="text" name="telefono" class="form-control" value="<%= proveedor.telefono || '' %>">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Correo Electrónico</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text" style="background:#FBF7F5;border-color:#EEE4E1;"><i class="bi bi-envelope text-primary"></i></span>
+                                            <input type="email" name="email" class="form-control" value="<%= proveedor.email || '' %>">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label class="form-label">Dirección Fiscal o Almacén</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text" style="background:#FBF7F5;border-color:#EEE4E1;"><i class="bi bi-geo-alt text-secondary"></i></span>
+                                            <input type="text" name="direccion" class="form-control" value="<%= proveedor.direccion || '' %>">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <hr class="boutique-divider my-4">
+
+                                <div class="d-flex justify-content-end gap-2">
+                                    <a href="/proveedores" class="btn btn-outline-rose">
+                                        <i class="bi bi-x-lg me-1"></i>Cancelar
+                                    </a>
+                                    <button type="submit" class="btn btn-boutique px-4">
+                                        <i class="bi bi-save2 me-1"></i>Actualizar Detalles
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

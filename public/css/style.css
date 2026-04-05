@@ -1,0 +1,815 @@
+/* public/css/style.css — Boutique Premium Theme */
+
+/* =====================================================
+   1. FUENTES ELEGANTES
+   ===================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* =====================================================
+   2. VARIABLES — PALETA BOUTIQUE
+   ===================================================== */
+:root {
+    /* Colores Principales */
+    --primary:        #C9847A;   /* Rose Gold */
+    --primary-dark:   #A86058;   /* Rose Gold oscuro (hover) */
+    --primary-light:  #F0C4BE;   /* Rose Gold claro */
+    --secondary:      #9B7FA6;   /* Mauve / Lila */
+    --secondary-dark: #7B5F87;   /* Mauve oscuro */
+    --accent:         #D4A574;   /* Champagne dorado */
+    --accent-light:   #F2E0CB;   /* Champagne claro */
+
+    /* Fondos */
+    --bg-main:        #FBF7F5;   /* Crema muy suave */
+    --bg-blush:       #F8EFF2;   /* Blush rosado */
+    --card-bg:        #FFFFFF;
+
+    /* Sidebar */
+    --sidebar-bg:     #2E1F29;   /* Bordeaux oscuro */
+    --sidebar-hover:  #3D2B35;   /* Bordeaux medio */
+    --sidebar-active: rgba(201, 132, 122, 0.15); /* Rose tenue */
+    --sidebar-text:   #F5EEF2;   /* Blanco rosado */
+    --sidebar-muted:  #9E8A96;   /* Gris malva */
+
+    /* Texto */
+    --text-primary:   #3D2030;   /* Bordeaux texto */
+    --text-muted:     #9E8A96;
+
+    /* Semánticos */
+    --success:        #6BAB8E;   /* Verde sage */
+    --danger:         #C0616F;   /* Rojo rose */
+    --warning:        #D4A574;   /* Amber suave */
+    --info:           #7BA7C0;   /* Azul pizarra */
+}
+
+/* =====================================================
+   3. BASE
+   ===================================================== */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, .display-title {
+    font-family: 'Playfair Display', serif;
+}
+
+/* =====================================================
+   4. LAYOUT PRINCIPAL (Sidebar + Contenido)
+   ===================================================== */
+.dashboard-wrapper {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar-main {
+    width: 255px;
+    background-color: var(--sidebar-bg);
+    background-image: linear-gradient(160deg, #2E1F29 0%, #1E1220 100%);
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    box-shadow: 4px 0 20px rgba(0,0,0,0.25);
+}
+
+.main-content {
+    flex-grow: 1;
+    overflow-y: auto;
+    width: calc(100% - 255px);
+    background-color: var(--bg-main);
+}
+
+/* =====================================================
+   5. SIDEBAR — BRANDING
+   ===================================================== */
+.sidebar-brand {
+    padding: 1.5rem 1.5rem 1rem 1.5rem;
+    border-bottom: 1px solid rgba(201, 132, 122, 0.2);
+}
+
+.sidebar-brand-title {
+    font-family: 'Playfair Display', serif;
+    color: var(--primary-light);
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin: 0;
+}
+
+.sidebar-brand-subtitle {
+    color: var(--sidebar-muted);
+    font-size: 0.65rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 2px;
+}
+
+/* =====================================================
+   6. SIDEBAR — PERFIL
+   ===================================================== */
+.sidebar-profile {
+    padding: 1.5rem 1rem 1.2rem 1rem;
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    position: relative;
+}
+
+.sidebar-avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    margin: 0 auto 12px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid rgba(201, 132, 122, 0.4);
+    box-shadow: 0 4px 15px rgba(201, 132, 122, 0.3);
+}
+
+.sidebar-avatar i {
+    font-size: 32px;
+    color: rgba(255,255,255,0.9);
+}
+
+.sidebar-profile h5 {
+    color: var(--sidebar-text);
+    margin: 0;
+    font-weight: 600;
+    font-size: 0.85rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-family: 'Inter', sans-serif;
+}
+
+.sidebar-profile-role {
+    color: var(--sidebar-muted);
+    font-size: 0.68rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-top: 3px;
+}
+
+/* =====================================================
+   7. SIDEBAR — NAVEGACIÓN
+   ===================================================== */
+.sidebar-nav-container {
+    padding: 1rem 0;
+    flex-grow: 1;
+    overflow-y: auto;
+}
+
+.sidebar-section-label {
+    color: var(--sidebar-muted);
+    font-size: 0.6rem;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    padding: 0.8rem 1.5rem 0.3rem;
+    font-weight: 600;
+}
+
+.nav-main .nav-link {
+    color: var(--sidebar-muted);
+    font-weight: 500;
+    padding: 0.7rem 1.5rem;
+    transition: all 0.25s ease;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.875rem;
+    border-left: 3px solid transparent;
+    gap: 10px;
+}
+
+.nav-main .nav-link .nav-link-inner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.nav-main .nav-link i.icon-left {
+    font-size: 1rem;
+    width: 18px;
+    text-align: center;
+    display: inline-block;
+    opacity: 0.8;
+}
+
+.nav-main .nav-link .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+.nav-main .nav-link:hover {
+    color: var(--sidebar-text);
+    background-color: var(--sidebar-hover);
+    border-left-color: var(--primary);
+}
+
+.nav-main .nav-link.active {
+    color: var(--primary-light);
+    background-color: var(--sidebar-active);
+    border-left-color: var(--primary);
+    font-weight: 600;
+}
+
+.nav-main .nav-link.active i.icon-left {
+    color: var(--primary-light);
+    opacity: 1;
+}
+
+/* =====================================================
+   8. TOP HEADER
+   ===================================================== */
+.top-header {
+    background-color: var(--bg-main);
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #EEE4E1;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(8px);
+    background-color: rgba(251, 247, 245, 0.95);
+}
+
+.search-bar {
+    background-color: #FFFFFF;
+    border-radius: 50px;
+    padding: 0.5rem 1.2rem;
+    display: flex;
+    align-items: center;
+    width: 380px;
+    max-width: 100%;
+    border: 1px solid #EEE4E1;
+    box-shadow: 0 2px 8px rgba(201, 132, 122, 0.06);
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.search-bar:focus-within {
+    border-color: var(--primary-light);
+    box-shadow: 0 2px 12px rgba(201, 132, 122, 0.15);
+}
+
+.search-bar input {
+    border: none;
+    background: transparent;
+    outline: none;
+    width: 100%;
+    font-size: 0.875rem;
+    color: var(--text-primary);
+}
+
+.search-bar input::placeholder {
+    color: var(--text-muted);
+}
+
+.search-bar i {
+    color: var(--primary);
+    font-size: 0.9rem;
+}
+
+/* =====================================================
+   9. BOTONES BOUTIQUE
+   ===================================================== */
+.btn {
+    border-radius: 8px;
+    padding: 0.5rem 1.2rem;
+    font-weight: 600;
+    font-size: 0.875rem;
+    letter-spacing: 0.3px;
+    transition: all 0.25s ease;
+}
+
+/* Botón principal — Rose Gold */
+.btn-boutique {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: #fff;
+    border: none;
+    box-shadow: 0 3px 10px rgba(201, 132, 122, 0.35);
+}
+.btn-boutique:hover {
+    background: linear-gradient(135deg, var(--primary-dark) 0%, #8A4D46 100%);
+    color: #fff;
+    box-shadow: 0 5px 15px rgba(201, 132, 122, 0.5);
+    transform: translateY(-1px);
+}
+.btn-boutique:active { transform: translateY(0); }
+
+/* Botón outline Rosa */
+.btn-outline-rose {
+    border: 1.5px solid var(--primary);
+    color: var(--primary);
+    background: transparent;
+}
+.btn-outline-rose:hover {
+    background-color: var(--primary);
+    color: #fff;
+}
+
+/* Botón Mauve */
+.btn-mauve {
+    background-color: var(--secondary);
+    color: #fff;
+    border: none;
+}
+.btn-mauve:hover {
+    background-color: var(--secondary-dark);
+    color: #fff;
+}
+
+/* Botón Danger rose */
+.btn-rose-danger {
+    background-color: var(--danger);
+    color: #fff;
+    border: none;
+}
+.btn-rose-danger:hover {
+    background-color: #a34d5a;
+    color: #fff;
+}
+
+/* Compatibilidad con clases previas */
+.btn-cyan    { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: #fff; border: none; box-shadow: 0 3px 10px rgba(201,132,122,0.35); }
+.btn-cyan:hover { background: linear-gradient(135deg, var(--primary-dark), #8A4D46); color: #fff; }
+.btn-magenta { background-color: var(--primary); color: #fff; border: none; }
+.btn-magenta:hover { background-color: var(--primary-dark); color: #fff; }
+.btn-green   { background-color: var(--success); color: #fff; border: none; }
+.btn-green:hover { background-color: #509d7e; color: #fff; }
+
+/* =====================================================
+   10. WIDGET CARDS (Dashboard y módulos)
+   ===================================================== */
+.widget-card {
+    background-color: var(--card-bg);
+    border: none;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(61, 32, 48, 0.07);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
+    margin-bottom: 24px;
+}
+
+.widget-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 28px rgba(61, 32, 48, 0.11);
+}
+
+/* Cabeceras de Widget */
+.widget-header-dark {
+    background: linear-gradient(135deg, #2E1F29 0%, #3D2B35 100%);
+    color: white;
+    padding: 1.5rem;
+}
+
+.widget-header-primary {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: white;
+    padding: 1rem 1.5rem;
+}
+.widget-header-primary i { cursor: pointer; }
+
+/* Alias para compatibilidad */
+.widget-header-magenta {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: white;
+    padding: 1rem 1.5rem;
+}
+.widget-header-magenta i { cursor: pointer; }
+
+.widget-header-accent {
+    background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-dark) 100%);
+    color: #fff;
+    padding: 0.8rem;
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+}
+
+/* Alias para compatibilidad */
+.widget-header-cyan {
+    background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-dark) 100%);
+    color: #fff;
+    padding: 0.8rem;
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+}
+
+/* =====================================================
+   11. TABLAS BOUTIQUE
+   ===================================================== */
+.boutique-table {
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+    font-size: 0.9rem;
+}
+
+.boutique-table thead th {
+    background-color: #F8EFF2;
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    padding: 1rem 1.2rem;
+    border-bottom: 2px solid #EEE4E1;
+    border-top: none;
+    white-space: nowrap;
+}
+
+.boutique-table tbody tr {
+    border-bottom: 1px solid #F5EBF0;
+    transition: background-color 0.15s ease;
+}
+
+.boutique-table tbody tr:hover {
+    background-color: #FDF5F7;
+}
+
+.boutique-table tbody td {
+    padding: 0.85rem 1.2rem;
+    vertical-align: middle;
+    border: none;
+    border-bottom: 1px solid #F5EBF0;
+}
+
+.boutique-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Compatibilidad con table Bootstrap */
+.table thead th {
+    background-color: #F8EFF2 !important;
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 2px solid #EEE4E1;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #FDF5F7 !important;
+}
+
+/* =====================================================
+   12. BADGES Y PILLS
+   ===================================================== */
+.badge-rose {
+    background-color: var(--primary-light);
+    color: var(--primary-dark);
+    font-weight: 600;
+    padding: 0.35em 0.75em;
+    border-radius: 50px;
+    font-size: 0.75em;
+}
+
+.badge-mauve {
+    background-color: rgba(155, 127, 166, 0.15);
+    color: var(--secondary-dark);
+    font-weight: 600;
+    padding: 0.35em 0.75em;
+    border-radius: 50px;
+    font-size: 0.75em;
+}
+
+.badge-champagne {
+    background-color: var(--accent-light);
+    color: #7A5C2E;
+    font-weight: 600;
+    padding: 0.35em 0.75em;
+    border-radius: 50px;
+    font-size: 0.75em;
+}
+
+/* =====================================================
+   13. CARDS DE FORMULARIOS Y MÓDULOS
+   ===================================================== */
+.module-card {
+    background: var(--card-bg);
+    border-radius: 16px;
+    border: none;
+    box-shadow: 0 4px 20px rgba(61, 32, 48, 0.07);
+    overflow: hidden;
+}
+
+.module-card-header {
+    background: linear-gradient(135deg, #F8EFF2 0%, #F5EBF0 100%);
+    border-bottom: 1px solid #EEE4E1;
+    padding: 1.2rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.module-title {
+    font-family: 'Playfair Display', serif;
+    color: var(--text-primary);
+    font-weight: 700;
+    font-size: 1.3rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 0;
+}
+
+.module-title-icon {
+    color: var(--primary);
+    font-size: 1.1rem;
+}
+
+/* =====================================================
+   14. FORMULARIOS
+   ===================================================== */
+.form-control:focus, .form-select:focus {
+    border-color: var(--primary-light);
+    box-shadow: 0 0 0 0.2rem rgba(201, 132, 122, 0.2);
+}
+
+.form-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-muted);
+    margin-bottom: 0.4rem;
+}
+
+/* =====================================================
+   15. PAGINACIÓN
+   ===================================================== */
+.page-link {
+    color: var(--primary);
+    border-color: #EEE4E1;
+}
+.page-link:hover {
+    background-color: var(--bg-blush);
+    color: var(--primary-dark);
+    border-color: var(--primary-light);
+}
+.page-item.active .page-link {
+    background-color: var(--primary);
+    border-color: var(--primary);
+    color: #fff;
+}
+
+/* =====================================================
+   16. ALERTAS BOUTIQUE
+   ===================================================== */
+.alert-boutique-success {
+    background-color: rgba(107, 171, 142, 0.12);
+    border-left: 4px solid var(--success);
+    color: #3a6e52;
+    border-radius: 10px;
+}
+
+.alert-boutique-warning {
+    background-color: rgba(212, 165, 116, 0.15);
+    border-left: 4px solid var(--accent);
+    color: #7A5C2E;
+    border-radius: 10px;
+}
+
+.alert-boutique-danger {
+    background-color: rgba(192, 97, 111, 0.12);
+    border-left: 4px solid var(--danger);
+    color: #8a3a45;
+    border-radius: 10px;
+}
+
+/* =====================================================
+   17. CONTACTOS (Dashboard widget)
+   ===================================================== */
+.contact-item {
+    display: flex;
+    align-items: center;
+    padding: 0.85rem 1rem;
+    border-bottom: 1px solid #F5EBF0;
+    transition: background-color 0.15s ease;
+}
+.contact-item:last-child { border-bottom: none; }
+.contact-item:hover { background-color: #FDF5F7; }
+
+.contact-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    margin-right: 14px;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+.bg-primary-rose { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); }
+.bg-mauve-grad   { background: linear-gradient(135deg, var(--secondary), var(--secondary-dark)); }
+.bg-accent-grad  { background: linear-gradient(135deg, var(--accent), #b8884e); }
+
+.contact-info h6 {
+    margin: 0 0 3px 0;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+.contact-info small {
+    color: var(--text-muted);
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* =====================================================
+   18. CLASES DE TEXTO/FONDO (compatibilidad + nuevas)
+   ===================================================== */
+.bg-light-gray  { background-color: var(--bg-main) !important; }
+.bg-blush       { background-color: var(--bg-blush) !important; }
+.bg-magenta     { background-color: var(--primary) !important; color: white; }
+.bg-cyan        { background-color: var(--secondary) !important; color: white; }
+.bg-red-orange  { background-color: var(--danger) !important; color: white; }
+.bg-yellow      { background-color: var(--accent) !important; color: #fff; }
+.bg-green       { background-color: var(--success) !important; color: white; }
+
+.text-boutique  { color: var(--primary) !important; }
+.text-mauve     { color: var(--secondary) !important; }
+.text-champagne { color: var(--accent) !important; }
+.text-rose      { color: var(--primary) !important; }
+/* alias viejos */
+.text-cyan      { color: var(--secondary) !important; }
+.text-magenta   { color: var(--primary) !important; }
+.text-green     { color: var(--success) !important; }
+.text-yellow    { color: var(--accent) !important; }
+
+/* =====================================================
+   19. UTILIDADES GENERALES
+   ===================================================== */
+.lh-1 { line-height: 1 !important; }
+
+.section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.2;
+}
+
+/* Divider decorativo */
+.boutique-divider {
+    height: 2px;
+    background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 50%, transparent 100%);
+    border: none;
+    margin: 1.5rem 0;
+    opacity: 0.4;
+}
+
+/* Scrollbar personalizado */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-main); }
+::-webkit-scrollbar-thumb { background-color: var(--primary-light); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background-color: var(--primary); }
+
+/* =====================================================
+   20. RESPONSIVE Y MOBILE TWEAKS
+   ===================================================== */
+@media (max-width: 992px) {
+    /* El contenedor deja de ser flex horizontal estricto para pantallas muy chicas */
+    .dashboard-wrapper {
+        display: block;
+        min-height: 100vh;
+        position: relative;
+    }
+
+    /* Ocultar el sidebar en móviles por defecto y hacerlo 'off-canvas' */
+    .sidebar-main {
+        position: fixed;
+        top: 0;
+        left: -280px;
+        height: 100vh;
+        width: 280px;
+        z-index: 1050; /* Por encima del header */
+        transition: left 0.3s ease-in-out;
+        box-shadow: 10px 0 25px rgba(0,0,0,0.5);
+    }
+    
+    /* Mostrar sidebar al ponerle una clase activa por JS */
+    .sidebar-main.mobile-active {
+        left: 0;
+    }
+
+    /* Fondo semitransparente cuando se abre el menú en móvil */
+    .sidebar-overlay {
+        display: none;
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(0,0,0,0.5);
+        backdrop-filter: blur(2px);
+        z-index: 1040;
+    }
+    .sidebar-overlay.mobile-active {
+        display: block;
+    }
+
+    /* El contenido principal ocupa todo el ancho */
+    .main-content {
+        width: 100%;
+        margin-left: 0;
+        padding-top: 60px; /* Espacio para el top bar móvil si está fijo */
+    }
+
+    /* El top-header estirado y ajustado */
+    .top-header {
+        position: fixed;
+        top: 0; left: 0; right: 0;
+        width: 100%;
+        padding: 0.8rem 1rem;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        z-index: 1000;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    /* Ajuste de barra de búsqueda en móvil */
+    .search-bar { 
+        width: 100%;
+        flex-grow: 1;
+        margin: 0 10px;
+        padding: 0.4rem 1rem;
+    }
+
+    /* Mostrar botón hamburguesa solo en móvil */
+    .mobile-menu-toggle {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        background: transparent;
+        border: 1px solid var(--primary-light);
+        color: var(--primary);
+        font-size: 1.5rem;
+        flex-shrink: 0;
+    }
+    .mobile-menu-toggle:active {
+        background: var(--bg-blush);
+    }
+
+    /* Ocultar botones de cerrar caja/salir en header si queda poco espacio
+       (preferir ponerlos en en sidebar o menú desplegable) */
+    .header-actions {
+        display: none !important;
+    }
+    
+    /* Ajustes generales a tablas y grids para celular */
+    .container-fluid {
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+    }
+    
+    /* Tarjetas apiladas y con márgenes reducidos */
+    .widget-card {
+        margin-bottom: 16px;
+    }
+    
+    .widget-header-dark,
+    .widget-header-accent,
+    .widget-header-primary {
+        padding: 1rem;
+    }
+    
+    /* Forzar barras de desplazamiento en tablas anchas */
+    .table-responsive {
+        border-radius: 8px;
+        border: 1px solid #EEE4E1;
+    }
+}
+
+/* Ocultar el toggle de menú en desktop */
+@media (min-width: 993px) {
+    .mobile-menu-toggle {
+        display: none !important;
+    }
+    .sidebar-overlay {
+        display: none !important;
+    }
+}

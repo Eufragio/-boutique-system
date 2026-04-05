@@ -1,0 +1,38 @@
+{
+  "name": "boutique-system",
+  "version": "1.0.0",
+  "description": "Sistema profesional de gestión de Boutique (Node.js + Postgres)",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "init-db": "node src/database/setup.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "boutique",
+    "nodejs",
+    "postgresql",
+    "mvc",
+    "express"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "connect-flash": "^0.1.1",
+    "date-fns": "^4.1.0",
+    "dotenv": "^16.4.7",
+    "ejs": "^3.1.10",
+    "exceljs": "^4.4.0",
+    "express": "^4.21.2",
+    "express-session": "^1.18.2",
+    "json2csv": "^6.0.0-alpha.2",
+    "multer": "^2.0.2",
+    "pg": "^8.13.1"
+  },
+  "devDependencies": {
+    "morgan": "^1.10.0",
+    "nodemon": "^3.1.9"
+  }
+}
